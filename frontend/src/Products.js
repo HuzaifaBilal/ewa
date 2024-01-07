@@ -13,8 +13,8 @@ const products = [
   },
   {
     _id: "2",
-    name: "Alex",
-    image: "/images/alex.jpg",
+    name: "Alexa",
+    image: "/images/alexa.jpg",
     description: "A smart assistant to help you manage your tasks.",
     brand: "Amazon",
     category: "Smart Home",
@@ -73,3 +73,4 @@ const products = [
     numReviews: 180,
   },
 ];
+export default products;
