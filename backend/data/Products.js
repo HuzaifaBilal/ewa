@@ -1,6 +1,5 @@
 const products = [
   {
-    _id: "1",
     name: "Airpods",
     image: "/images/airpods.jpg",
     description: "Wireless earbuds for an amazing listening experience.",
@@ -12,7 +11,6 @@ const products = [
     numReviews: 120,
   },
   {
-    _id: "2",
     name: "Alexa",
     image: "/images/alexa.jpg",
     description: "A smart assistant to help you manage your tasks.",
@@ -24,7 +22,6 @@ const products = [
     numReviews: 80,
   },
   {
-    _id: "3",
     name: "Camera",
     image: "/images/camera.jpg",
     description: "High-quality camera for capturing precious moments.",
@@ -36,7 +33,6 @@ const products = [
     numReviews: 150,
   },
   {
-    _id: "4",
     name: "Mouse",
     image: "/images/mouse.jpg",
     description: "Ergonomic mouse for comfortable computer navigation.",
@@ -48,7 +44,6 @@ const products = [
     numReviews: 50,
   },
   {
-    _id: "5",
     name: "Playstation",
     image: "/images/playstation.jpg",
     description: "Gaming console for immersive gaming experiences.",
@@ -60,7 +55,6 @@ const products = [
     numReviews: 200,
   },
   {
-    _id: "6",
     name: "Phone",
     image: "/images/phone.jpg",
     description:
