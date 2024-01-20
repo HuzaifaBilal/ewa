@@ -17,7 +17,7 @@ const ProductScreen = () => {
       {isLoading ? (
         <h2>Loading...</h2>
       ) : error ? (
-        <div>{error?.data?.message || erroor.error}</div>
+        <div>{error?.data?.message || error.error}</div>
       ) : (
         <Row>
           <Col md={5}>
