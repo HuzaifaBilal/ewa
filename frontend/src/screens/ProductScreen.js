@@ -7,7 +7,11 @@ import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
-  const { data: product, isLoading, error } = useGetProductDetailsQuery();
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGetProductDetailsQuery(productId);
 
   return (
     <>
@@ -17,7 +21,7 @@ const ProductScreen = () => {
       {isLoading ? (
         <h2>Loading...</h2>
       ) : error ? (
-        <div>{error?.data?.message || error.error}</div>
+        <>{error?.data?.message || error.error}</>
       ) : (
         <Row>
           <Col md={5}>
