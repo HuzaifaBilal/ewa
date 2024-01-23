@@ -13,13 +13,21 @@ import { FaTrash } from "react-icons/fa";
 import Message from "../components/Message";
 import { UseDispatch, useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../slices/cartSlice";
+import { removeFromCart } from "../slices/cartSlice";
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+
   const addToCartHandler = async (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
+  };
+  const removeFromCartHandler = async (id) => {
+    dispatch(removeFromCart(id));
+  };
+  const checkoutHandler = () => {
+    navigate("/login?redirect=/shipping");
   };
   return (
     <Row>
@@ -62,7 +70,11 @@ const CartScreen = () => {
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                    <Button type="button" variant="light">
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={(e) => removeFromCartHandler(item._id)}
+                    >
                       {" "}
                       <FaTrash></FaTrash>
                     </Button>
@@ -92,6 +104,7 @@ const CartScreen = () => {
                 type="button"
                 className="btn-block"
                 disabled={cartItems.length === 0}
+                onClick={checkoutHandler}
               >
                 Proceed to Checkout
               </Button>
