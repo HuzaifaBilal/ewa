@@ -3,12 +3,24 @@ import { Navbar, Nav, Container, Badge, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import logo from "../assets/logo.png";
 import { LinkContainer } from "react-router-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useLogoutMutation } from "../slices/usersApiSlice";
+import { logout } from "../slices/authSlice";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
-  const logoutHandler = () => {
-    console.log("logout");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [logoutApiCall] = useLogoutMutation();
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap();
+      dispatch(logout());
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <header>
@@ -33,7 +45,11 @@ const Header = () => {
                 </Nav.Link>
               </LinkContainer>
               {userInfo ? (
-                <NavDropdown title={userInfo.name} id="username">
+                <NavDropdown
+                  className="d-flex align-items-center"
+                  title={userInfo.name}
+                  id="username"
+                >
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
@@ -43,8 +59,8 @@ const Header = () => {
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
-                  <Nav.Link>
-                    <FaUser />
+                  <Nav.Link className="d-flex align-items-center">
+                    <FaUser className="mx-1" />
                     Sign In
                   </Nav.Link>
                 </LinkContainer>
