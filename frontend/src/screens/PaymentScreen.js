@@ -16,7 +16,7 @@ const PaymentScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
-    navigate("/placeholder");
+    navigate("/placeorder");
   };
   useEffect(() => {
     if (!shippingAddress) {
@@ -43,7 +43,9 @@ const PaymentScreen = () => {
             ></Form.Check>
           </Col>
         </Form.Group>
-        <Button type="submit" variant="primary"></Button>
+        <Button type="submit" variant="primary">
+          Submit
+        </Button>
       </Form>
     </FormContainer>
   );

@@ -8,11 +8,18 @@ import {
   Button,
   Card,
 } from "react-bootstrap";
+import { useEffect } from "react";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { useGetOrderDetailsQuery } from "../slices/ordersApiSlice";
+import {
+  useGetOrderDetailsQuery,
+  usePayOrderMutation,
+  useGetPayPalClientIdQuery,
+} from "../slices/ordersApiSlice";
+import { toast } from "react-toastify";
+import { UseSelector, useSelector } from "react-redux";
 import React from "react";
-
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 const OrderScreen = () => {
   const { id: orderId } = useParams();
   const {
@@ -21,6 +28,33 @@ const OrderScreen = () => {
     isLoading,
     error,
   } = useGetOrderDetailsQuery(orderId);
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+  const { userInfo } = useSelector((state) => state.auth);
+  const {
+    data: paypal,
+    isLoading: loadingPayPal,
+    error: errorPayPal,
+  } = useGetPayPalClientIdQuery();
+  useEffect(() => {
+    if (!errorPayPal && !loadingPayPal && paypal.clientId) {
+      const loadPayPalScript = async () => {
+        paypalDispatch({
+          type: "resetOptions",
+          value: {
+            "client-id": paypal.clientId,
+            currency: "USD",
+          },
+        });
+        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
+      };
+      if (order && !order.isPaid) {
+        if (!window.paypal) {
+          loadPayPalScript();
+        }
+      }
+    }
+  }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
   return isLoading ? (
     <Loader></Loader>
   ) : error ? (
@@ -44,7 +78,7 @@ const OrderScreen = () => {
               <p>
                 <strong>Address:</strong>
                 {order.shippingAddress.address},{order.shippingAddress.city}
-                {order.hippingAddress.postalCode},
+                {order.shippingAddress.postalCode},
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
