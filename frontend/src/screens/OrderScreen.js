@@ -7,6 +7,7 @@ import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
+  useDeliverOrderMutation,
 } from "../slices/ordersApiSlice";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -21,8 +22,11 @@ const OrderScreen = () => {
     error,
   } = useGetOrderDetailsQuery(orderId);
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const { userInfo } = useSelector((state) => state.auth);
+
   const {
     data: paypal,
     isLoading: loadingPayPal,
@@ -77,6 +81,15 @@ const OrderScreen = () => {
       ],
     });
   }
+  const deliverOrderHandler = async () => {
+    try {
+      await deliverOrder(orderId);
+      refetch();
+      toast.success("Order Delivered");
+    } catch (err) {
+      toast.error(err?.data?.message || err.message);
+    }
+  };
   return isLoading ? (
     <Loader></Loader>
   ) : error ? (
@@ -195,7 +208,21 @@ const OrderScreen = () => {
                   )}
                 </ListGroup.Item>
               )}
-              {/*Pay order placeholder*/}
+              {loadingDeliver && <Loader></Loader>}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverOrderHandler}
+                    >
+                      Mark as Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
